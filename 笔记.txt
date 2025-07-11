@@ -1,0 +1,73 @@
+Git是一个本地化的仓库
+在Git中文件的修改一般分为三个区域
+① 工作区：当前正在编辑代码的目录
+② 暂存区：执行add时将文件添加到暂存
+③ 版本库（repository）：执行comiit，暂存区的内容会提交到Git的版本库，作为一个新的版本
+
+==========常用命令===========
+1. 使用git init来初始化，会生成一个.git文件夹，该目录就变成Git仓库了。
+
+2. 通过 git add 文件名 将笔记文件添加到Git暂存区
+    如果有多个文件 git add .，他会将所有发生修改或新增/删除的文件加入暂存区
+
+
+2.5 通过 git status来查看当前暂存区的状态
+
+xli1@PF5B6S8R:~/workspace/git-learning$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   file1 - コピー (2).txt:Zone.Identifier
+        new file:   file1 - コピー.txt:Zone.Identifier
+        new file:   file1.txt
+        new file:   file2.txt
+        new file:   file3.txt
+        new file:   笔记.txt
+
+
+3. git commit 会把暂存区的内容提交到Git本地仓库作为一个新的版本
+还可以通过 -m "添加提交说明"
+
+xli1@PF5B6S8R:~/workspace/git-learning$ git commit -m "第一次提交"
+[master (root-commit) 78f86f8] 第一次提交
+ 6 files changed, 3 insertions(+)
+ create mode 100644 file1 - コピー (2).txt:Zone.Identifier
+ create mode 100644 file1 - コピー.txt:Zone.Identifier
+ create mode 100644 file1.txt
+ create mode 100644 file2.txt
+ create mode 100644 file3.txt
+ create mode 100644 笔记.txt
+
+3.5 通过git log查看仓库版本和提交历史
+* 注意 git status是针对暂存区的，git log是查看当前仓库版本commit
+
+xli1@PF5B6S8R:~/workspace/git-learning$ git log
+commit 78f86f8f74a4ce224d9312d37d0f9189af6ffdb1 (HEAD -> master)
+Author: Xinyu Li <xinyu.li.jn@hitachi.com>
+Date:   Fri Jul 11 09:47:28 2025 +0900
+
+    第一次提交
+
+这里commit 78f86f8f74a4ce224d9312d37d0f9189af6ffdb1 (HEAD -> master) 是指当前HEAD指针指向的 commit ID (哈希值)
+
+什么是HEAD？HEAD是一个指针，告诉你当前在哪个分支，中的哪个commit（提交的版本）
+例如，当你连续提交三个版本A，B，C时：
+A —— B ——  C （master）
+          ↑
+         HEAD
+
+4. 回滚
+· 如果没有提交到暂存区，只是修改了文件：通过git checkout即可将修改的文件撤回
+· 如果只是将修改的文件提交到了暂存区：通过 git reset 文件名将暂存区的文件删除，之后通过 git checkout 文件名将修改的文件撤销回修改前
+
+--已经提交的commit进行回滚的两种办法--
+① git revert commit ID
+Revert会在当前分支生成一个新的commit（版本3） ，它的内容和版本1是一样的。
+注意：版本2 依然存在，不会被删除。如下图：
+A —— B ——  C （master）
+          ↑
+         HEAD
+
