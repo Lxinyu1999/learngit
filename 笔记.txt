@@ -103,10 +103,89 @@ A —— B —— C （master）
 · 与其先 checkout 然后 branch，Git 也支持一步到位git checkout -b 新分支名字 A
 · 还可以让detached Head重新指回master分支，git checkout master
 
-***分支相关***
-git checkout branch_name 切换到某个分支
-git branch 新名字	基于当前提交创建一个新分支
+一步到位的指令：
+git commit -a -m "评论内容" 
+
+******************分支相关*******************
 git branch 查看所有本地分支，并用*标注当前所在的分支
 * master
   develop
   feature/login
+
+git branch 新名字	基于当前提交创建一个新分支
+
+git checkout branch_name 切换到某个分支
+
+一步到位：创建新分支并切换 git checkout -b 新分支名
+
+分支合并merge：指把一个分支的改动（假设各自完成了各自的功能）合并到另一个分支形成一个新的commit
+
+假设初始现状是：
+master: A —— B
+             \
+feature:      C —— D
+
+目前在分支feature的D上，现在我们要把D合并回master
+首先切回master: git checkout master
+然后合并：git merge feature
+
+A —— B ——--- E（合并点）
+      \     /
+       C——D
+
+合并可能遇到冲突：
+如果两个分支改了同一个文件的同一行 → Git 无法自动合并 → 冲突（conflict）。
+
+解决冲突步骤：
+1️⃣ Git会提示哪些文件冲突
+2️⃣ 修改冲突 → 保存
+3️⃣ git add 冲突文件 → 标记为已解决
+4️⃣ git commit
+
+
+**************远程分支***************
+远程分支是将仓库托管在远程仓库（Github，Gitlab，Gitee）的分支。
+本地分支和远程分支是不同的，他们之间可以通过pull/push进行同步
+
+① 查看当前本地仓库对应的远程仓库：git remote -v
+Git 本身不直接绑定账号，它只认：远程仓库地址（URL）和 凭证（Credential），凭证分为HTTPS（用户名+密码）或者SSH（SSH Key、Token）
+通过 ssh -T git@gitlab.com 可以告诉你用的哪个gitlab账号
+
+② 克隆远程仓库：git clone 仓库地址
+可以直接将远程仓库下载下来并建立和远程仓库的关联
+
+③ 建立和远程仓库的连接（通过SSH）
+1️⃣首先检查是否有公私钥：ls ~/.ssh
+id_ed25519  id_ed25519.pub  
+id_ed25519 ➔ 这是你的 私钥（千万不要泄露！）
+id_ed25519.pub ➔ 这是你的 公钥（可以分享给GitHub、GitLab等）
+
+如果没有，生成SSH Key：ssh-keygen -t ed25519 -C "你的GitHub邮箱"
+
+之后检查显示公钥内容：cat ~/.ssh/ide_ed25119.pub
+2️⃣登录 GitHub → 右上角头像 → Settings → SSH and GPG keys → New SSH key。
+3️⃣ Title 随便写（比如：My Laptop）
+4️⃣ Key 直接粘贴刚才的公钥内容。
+通过ssh -T git@github.com (第一次连接需要同意协议）
+xli1@PF5B6S8R:~/workspace/git-learning$ ssh -T git@github.com
+Hi Lxinyu1999! You've successfully authenticated, but GitHub does not provide shell access.
+
+⑤ 给当前本地项目添加远程仓库（假设已经在github上有一个远程仓库的情况）
+git remote add origin git@github.com:Lxinyu1999/项目名
+项目链接在github上的SSH mini dash可以看到
+检查是否连接上：git remote -v
+origin  git@github.com:Lxinyu1999/learngit.git (fetch)
+origin  git@github.com:Lxinyu1999/learngit.git (push)
+
+⑥ 拉取GitHub上的代码
+由于现在都推荐用main，我们把本地的分支名字改一下
+git branch -m master main
+
+git pull origin main --allow-unrelated-histories
+--allow-unrelated-histories 参数的意思是：即使两个仓库是完全不同的历史，也允许合并。
+
+
+⑦ 推送到Github
+
+-u命令可以将本地的main分支默认对应到github远程 origin/main 分支：git push -u origin main 
+之后就只需要git push, git pull就行了，不需要每次都指定名字：git push origin master
