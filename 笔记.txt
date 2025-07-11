@@ -188,4 +188,8 @@ git pull origin main --allow-unrelated-histories
 ⑦ 推送到Github
 
 -u命令可以将本地的main分支默认对应到github远程 origin/main 分支：git push -u origin main 
-之后就只需要git push, git pull就行了，不需要每次都指定名字：git push origin master
+之后就只需要git push, git pull就行了，不需要每次都指定名字：git push origin main
+
+之后就可以 git commit -a -m "" ，然后git push了
+
+
