@@ -193,3 +193,20 @@ git pull origin main --allow-unrelated-histories
 之后就可以 git commit -a -m "" ，然后git push了
 
 
+******************实战：使用多分支记笔记****************
+怎么用git+github进行框架代码的学习呢？
+比如要学习一个angular项目，我们每次都修改了里面的内容作为新的一讲。但是我并不想每次有了新的一讲就重新建立一个项目
+
+
+方法：每次新开一节，就创建一个新的分支
+git checkout -b tutorial-1
+git checkout -b tutorial-2
+...
+
+其中git checkout -b 表示创建新分支并切换
+
+每创建一个新分支就用git commit -a -m等来提交完成该分支
+
+如果想回到之前的分支：git checkout 过去的分支名
+
+另外可以通过git push推送当前分支到远程仓库
