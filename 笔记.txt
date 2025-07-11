@@ -71,3 +71,42 @@ A —— B ——  C （master）
           ↑
          HEAD
 
+
+如果这种情况下，想再次回退到版本2怎么办？
+当然可以继续revert生成版本4；不过也可以通过 git reset --hard commitID
+这样HEAD会直接指向B，但是C之后的所有commit都会被丢弃！！
+
+② git checkout A
+那么此时HEAD会被移动到A，但是如果在A上做新的修改并commit，那么这个新的commit会从A中分叉出一条新的branch！
+假设你回退到了版本A
+A —— B —— C （master）
+↑
+HEAD
+
+此时的HEAD虽然指向了A，但HEAD并没有指向master分支！！！
+这种情况叫做 Detached HEAD 状态
+
+对A进行了新的修改并git commit：
+A —— B —— C （master）
+ \
+  D （新的commit）
+本来在master分支的，跑到了新分支创建了D，且该分支无名称
+
+
+如果继续提交：
+A —— B —— C （master）
+ \
+  D —— E —— F （HEAD）
+
+解决方法：
+· 可以通过 git branch 新名字 来给Detached HEAD分支起名
+· 与其先 checkout 然后 branch，Git 也支持一步到位git checkout -b 新分支名字 A
+· 还可以让detached Head重新指回master分支，git checkout master
+
+***分支相关***
+git checkout branch_name 切换到某个分支
+git branch 新名字	基于当前提交创建一个新分支
+git branch 查看所有本地分支，并用*标注当前所在的分支
+* master
+  develop
+  feature/login
